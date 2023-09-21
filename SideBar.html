@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<meta http-equiv="content-type" content="application/json; charset=UTF-8">
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+ 
+
+  function updateDivContent(divId, content) {
+  $(`#${divId}`).append(`<p>${content}</p>`);
+}
+
+    // Function to initialize the sidebar content
+    function initializeSidebarContent() {
+       // Disable the button to prevent multiple API calls
+      $('#updateButton').prop('disabled', true);
+
+      // Clear the API response content inside each div element
+      $('#div1 p').remove();
+      $('#div2 p').remove();
+      $('#div3 p').remove();
+      $('#div4 p').remove();
+      // Call the server-side functions to get the API results
+      google.script.run.withSuccessHandler(updateSegmentationContent).callSegmentationAPIwithSelected();
+      google.script.run.withSuccessHandler(updateLemmatizationContent).CallLemmatizationAPIwithSelected();
+      google.script.run.withSuccessHandler(updateSpellCheckContent).callSpellCheckAPIwithSelected();
+      google.script.run.withSuccessHandler(updateDiacritizationContent).callDiacritizationAPIwithSelected();
+    }
+
+    // there is an issue in the event listener 
+    function HighlightAllPOS() { //2
+    console.log("Button clicked!");
+    // Disable the button to prevent multiple clicks
+    $('#highlightButton').prop('disabled', true);
+
+    // Call the server-side function to highlight POS
+    google.script.run.withSuccessHandler(function() {
+      // Enable the button after highlighting is done
+      $('#highlightButton').prop('disabled', false);
+    }).highlightWordsWithMultiplePOS(); // server-side function name
+  }
+
+    // Function to update the segmentation content
+    function updateSegmentationContent(content) {
+      updateDivContent('div1', content);
+       // Enable the button after updating the content
+      $('#updateButton').prop('disabled', false);
+    }
+
+    // Function to update the diacritization content
+    function updateDiacritizationContent(content) {
+      updateDivContent('div2', content);
+       // Enable the button after updating the content
+      $('#updateButton').prop('disabled', false);
+    }
+
+    // Function to update the lemmatization content
+    function updateLemmatizationContent(content) {
+      updateDivContent('div3', content);
+       // Enable the button after updating the content
+      $('#updateButton').prop('disabled', false);
+    }
+
+    // Function to update the spell check content
+    function updateSpellCheckContent(content) {
+      updateDivContent('div4', content);
+       // Enable the button after updating the content
+     $('#updateButton').prop('disabled', false);
+    }
+
+
+     // Add event listener to the button
+    $(document).ready(function() {
+      $('#updateButton').click(initializeSidebarContent);
+      $('#highlightButton').click(HighlightAllPOS); // 3 
+        });
+
+</script>
+</head>
+
+
+<body>
+<div id="linguistic info" dir="rtl"> 
+<div id="div1"><h3>التقطيع</h3></div>
+<div id="div2"><h3>التشكيل</h3></div>
+<div id="div3"><h3>اصول الكلمات</h3></div>
+<div id="div4"><h3>التصحيح الاملائي</h3></div>
+</div>
+
+
+<!-- Button to trigger the initialization of sidebar content -->
+
+  <button id="updateButton" dir="rtl">Update Content</button>
+  <button id="highlightButton" dir="rtl">Highlight POS</button> 
+
+  <!-- 1 -->
+
+</body>
+</html>
+<!DOCTYPE html>
